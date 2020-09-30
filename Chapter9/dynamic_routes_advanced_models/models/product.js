@@ -3,6 +3,9 @@
 const fs = require('fs')
 const path = require('path')
 
+
+const Cart=require('./cart')
+
 const p = path.join(path.dirname(process.mainModule.filename),
     'data',
     'products.json'
@@ -23,7 +26,8 @@ const getProductsFromFile = (callback) => {
 
 // const products = [] 这里我们不用数组存储了
 module.exports = class Product {
-    constructor(title, imageUrl, description, price) {
+    constructor(id, title, imageUrl, description, price) {
+        this.id = id;
         this.title = title;
         this.imageUrl = imageUrl;
         this.description = description;
@@ -32,11 +36,25 @@ module.exports = class Product {
 
     //保存数据
     save() {
-        getProductsFromFile((products)=>{
-            products.push(this)
-            fs.writeFile(p, JSON.stringify(products), (err) => {
-                console.log(err)
-            })
+
+        getProductsFromFile((products) => {
+            if (this.id) {
+                const existingProductIndex=products.findIndex(prod=>prod.id===this.id)
+                const upadatedProducts=[...products]
+                upadatedProducts[existingProductIndex]=this  //Product
+                fs.writeFile(p, JSON.stringify(upadatedProducts), (err)=>{
+                    console.log('err module/product  module.exports class Producg')
+                    console.log(err)
+                })
+            }else{
+                //给每个product添加ID
+                this.id = Math.random().toString()
+                products.push(this)
+                fs.writeFile(p, JSON.stringify(products), (err) => {
+                    console.log(err)
+                })
+            }
+
         })
 
         // // products.push(this)
@@ -60,6 +78,25 @@ module.exports = class Product {
 
     }
 
+
+
+    //删除数据
+   static deleteById(id){
+       getProductsFromFile(products => {
+          // const productIndex=products.findIndex(prod=>prod.id===id)
+           const product=products.find(prod=>prod.id===id)
+           const updatedProducts=products.filter(prod=>prod.id!==id) //过滤不等于该id的Products
+           //再重新写入文件
+           fs.writeFile(p, JSON.stringify(updatedProducts),err=>{
+               console.log(err)
+               Cart.deleteProduct(id,product.price)
+           })
+
+       })
+    }
+
+
+
     //获取所有数据
     static fetchAll(callback) {
         getProductsFromFile(callback)
@@ -79,5 +116,16 @@ module.exports = class Product {
         //     callback(JSON.parse(fileContent)) //使用回调
         // })
         // // return products
+    }
+
+    //获取单个商品的数据
+    static findById(id, callback) {
+        getProductsFromFile(products => {
+            const product = products.find(p => {
+
+                return p.id === id
+            })
+            callback(product)
+        })
     }
 }

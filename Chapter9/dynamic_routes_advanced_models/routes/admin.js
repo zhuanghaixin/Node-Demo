@@ -13,7 +13,7 @@ const router=express.Router()
 // const products=[]
 
 // /admim/add-prodct =>GET
-router.get('/add-product',adminController.getAddtProduct);
+router.get('/add-product',adminController.getAddProduct);
 
 // /admim/products =>GET
 router.get('/products',adminController.getProducts);
@@ -22,7 +22,14 @@ router.get('/products',adminController.getProducts);
 
 router.post('/add-product',adminController.postAddProduct);
 
+//进入edit-product页面
+router.get('/edit-product/:productId',adminController.getEditProduct)
 
+//编辑后，提交edit-product
+router.post('/edit-product',adminController.postEditProduct)
+
+//删除Product
+router.post('/delete-product',adminController.postDeleteProduct)
 
 module.exports=router
 
