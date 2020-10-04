@@ -5,3 +5,4 @@ const pool=mysql.createPool({
     database:'node-complete',
     password:'zhx199710085470'
 })
+module.exports=pool.promise()
