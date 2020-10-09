@@ -24,6 +24,7 @@ const Product=sequelize.define('product',{
         allowNull:false
     }
 })
+module.exports = Product
 
 // //通过Model将数据存储在数据库database中
 // const db=require('../util/database')
