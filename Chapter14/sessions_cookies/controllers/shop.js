@@ -40,6 +40,7 @@ exports.getProducts = (req, res, next) => {
                 prods: products,
                 pageTitle: 'All Products - Products',
                 path: '/products',
+                isAuthenticated:  req.session.isLoggedIn
             });
         }).catch(err => {
         console.log(err)
@@ -59,7 +60,8 @@ exports.getProduct = (req, res, next) => {
             {
                 product: product,
                 pageTitle: product.title,
-                path: '/products'
+                path: '/products',
+                isAuthenticated:  req.session.isLoggedIn
             })
     }).catch(err => {
         console.log(err)
@@ -74,6 +76,7 @@ exports.getIndex = (req, res, next) => {
                 prods: products,
                 pageTitle: 'Shop - Index',
                 path: '/',
+                isAuthenticated:  req.session.isLoggedIn
             });
         }).catch(err => {
         console.log(err)
@@ -97,6 +100,7 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
     //得到购物车商品
+
     req.user
         .populate('cart.items.productId')
         .execPopulate()  //返回Promise
@@ -107,13 +111,15 @@ exports.getCart = (req, res, next) => {
             res.render('shop/cart', {
                 pageTitle: 'Your Cart',
                 path: '/cart',
-                products: products
+                products: products,
+                isAuthenticated:  req.session.isLoggedIn
 
             })
         }).catch(err => {
         console.log(err)
     })
 }
+
 
 //在单件商品中添加购物车
 exports.postCart = (req, res, next) => {
@@ -206,7 +212,7 @@ exports.postOrder = (req, res, next) => {
             const order = new Order({
                 user: {
                     name: req.user.name,
-                    userId: req.user
+                    userId: req.user._id
                 },
                 products: products
             })
@@ -229,7 +235,8 @@ exports.getOrders = (req, res, next) => {
         res.render('shop/orders', {
             path: '/orders',
             pageTitle: 'Your Orders',
-            orders: orders
+            orders: orders,
+            isAuthenticated:  req.session.isLoggedIn
         });
     }).catch(err => console.log(err));
 }

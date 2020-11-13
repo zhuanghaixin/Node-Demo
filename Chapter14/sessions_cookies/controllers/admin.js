@@ -7,7 +7,8 @@ exports.getAddProduct = (req, res, next) => {
         {
             pageTitle: 'Add Product',
             path: '/admin/add-product',
-            editing: false
+            editing: false,
+            isAuthenticated:  req.session.isLoggedIn
         })
 }
 
@@ -25,7 +26,7 @@ exports.postAddProduct = (req, res, next) => {
             price: price,
             description: description,
             imageUrl: imageUrl,
-            userId:req.user._id  //或者 userId:req.user._id
+            userId:req.user  //或者 userId:req.user._id
         }
         )
     product
@@ -60,7 +61,8 @@ exports.getEditProduct = (req, res, next) => {
                     pageTitle: 'Edit Product',
                     path: '/admin/edit-product',
                     editing: editMode,//可编辑状态
-                    product: product
+                    product: product,
+                    isAuthenticated:  req.session.isLoggedIn
                 })
         }).catch(err => {
         console.log(err)
@@ -104,6 +106,8 @@ exports.postEditProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
     // Product.fetchAll()
     // Product.find().cursor().next()
+    console.log('req.session....')
+    console.log(req.session)
     Product.find()
         // .select('title price -_id')  //只选择title price 不要_id
         // .populate('userId')  // .populate('userId'，'name') 可以你用其他集合的文档
@@ -114,6 +118,7 @@ exports.getProducts = (req, res, next) => {
                 prods: products,
                 pageTitle: 'Admin Products',
                 path: '/admin/products',
+                isAuthenticated:  req.session.isLoggedIn
             });
         })
 

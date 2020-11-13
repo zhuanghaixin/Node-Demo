@@ -29,7 +29,10 @@
                     <div class="card__actions">
 <!--                        /products/0.43123-->
                         <a href="/products/<%= product._id %>" class="btn">Details</a>
+                        <% if(isAuthenticated){ %>
                         <%- include('../includes/add-to-cart.ejs',{product:product}) %>
+                        <%}%>
+
 
                     </div>
                 </article>
