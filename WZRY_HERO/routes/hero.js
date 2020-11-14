@@ -14,7 +14,7 @@ const router=express.Router()
 //4 配置各种路由
 router.get('/list',heroController.getHeroList)
 
-router.get('/info',heroController.getHeroInfo)
+router.get('/info/:id',heroController.getHeroInfo)
 
 router.post('/update',heroController.updateHero)
 

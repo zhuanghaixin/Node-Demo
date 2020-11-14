@@ -33,7 +33,7 @@ const c = new Crawler({
                 //ele:DOM对象
                 // console.log( $(ele).html() );
                 let name = $(ele).find('img').attr('alt');
-                let icon = $(ele).find('img').attr('src');
+                let icon = `https:${$(ele).find('img').attr('src')}`;
 
                 let id = icon.split('/').reverse()[1];
                 let skill = `https://game.gtimg.cn/images/yxzj/img201606/heroimg/${id}/${id}00.png`

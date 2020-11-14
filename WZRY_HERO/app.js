@@ -69,17 +69,19 @@ const sequelize = require('./utils/database')
 
 
 //6.配置路由
-//6.1 404路由
-const errorController = require('./controllers/error')
-app.use(errorController.get404);
-//6.2 英雄路由
+
+//6.1 英雄路由
 const heroRoutes = require('./routes/hero')
-//6.3 鉴权路由
+//6.2 鉴权路由
 const authRoutes = require('./routes/auth')
 //使用路由
 app.use('/hero', heroRoutes)
 //使用路由
 app.use(authRoutes)
+
+//6.x 404路由
+const errorController = require('./controllers/error')
+app.use(errorController.get404);
 
 //7.开启服务器
 app.listen(3000)
