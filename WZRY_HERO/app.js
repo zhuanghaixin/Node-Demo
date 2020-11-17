@@ -37,9 +37,8 @@ const cookieSession = require('cookie-session');
 // const  sessionStore = new MySQLStore(options);
 
 
-
-
 // 使用中间件
+
 //4.1
 app.use(bodyParser.urlencoded({extended: false}))
 //4.2
@@ -65,7 +64,7 @@ app.use(fileUpload())
 //     maxAge: 7 * 24 * 60 * 60 * 1000 // 24 hours
 // }));
 
-//4.5
+
 //5.导入数据库
 const sequelize = require('./utils/database')
 
@@ -78,14 +77,41 @@ const sequelize = require('./utils/database')
 const heroRoutes = require('./routes/hero')
 //6.2 鉴权路由
 const authRoutes = require('./routes/auth')
-//6.3 验证码路由
-const captchaRoute=require('./routes/captcha')
+
+/* svg-captcha模块：生成验证码 */
+var svgCaptcha = require('svg-captcha');
+
+let captchaText = '';//全局变量存储验证码答案
 //使用路由
 app.use('/hero', heroRoutes)
+// 验证码功能实现
+//5.6 验证码
+app.get('/captcha', (req, res) => {
+    //(2)处理：
+    let captcha = svgCaptcha.create({
+        size: 4,
+        noise: 2,
+        color: true,
+        background: '#f3d1ac'
+    });
+    // console.log(captcha);
+    //分别获取文本 + 图片
+    captchaText = captcha.text;
+    console.log(captchaText)
+
+    //(3)响应:
+    res.type('svg');
+    res.status(200).send(captcha.data);
+});
+//所有路由都可以访问
+app.use((req, res, next) => {
+        req.captchaText = captchaText
+        next()
+    }
+)
 //使用路由
 app.use(authRoutes)
-//使用路由
-app.use(captchaRoute)
+
 
 //6.x 404路由
 const errorController = require('./controllers/error')
